@@ -8,16 +8,20 @@ MAX_BOOK_PLIES = 200
 MAX_BOOK_WEIGHT = 1000000
 POLYGLOT_MAX_WEIGHT = 65535
 
+
 def format_zobrist_key_hex(zobrist_key):
     return f"{zobrist_key:016x}"
 
+
 def get_zobrist_key_hex(board):
     return format_zobrist_key_hex(chess.polyglot.zobrist_hash(board))
+
 
 class BookMove:
     def __init__(self):
         self.weight = 0
         self.move = None
+
 
 class BookPosition:
     def __init__(self):
@@ -26,6 +30,7 @@ class BookPosition:
 
     def get_move(self, uci):
         return self.moves.setdefault(uci, BookMove())
+
 
 class Book:
     def __init__(self):
@@ -91,6 +96,7 @@ class Book:
                 if i % 10000 == 0:
                     print(f"📚 Merged {i} moves from {path}")
 
+
 class LichessGame:
     def __init__(self, game):
         self.game = game
@@ -106,13 +112,19 @@ class LichessGame:
         res = self.result()
         return {"1-0": 2, "1/2-1/2": 1}.get(res, 0)
 
+
 def correct_castling_uci(uci, board):
     if board.piece_at(chess.parse_square(uci[:2])).piece_type == chess.KING:
-        if uci == "e1g1": return "e1h1"
-        if uci == "e1c1": return "e1a1"
-        if uci == "e8g8": return "e8h8"
-        if uci == "e8c8": return "e8a8"
+        if uci == "e1g1":
+            return "e1h1"
+        if uci == "e1c1":
+            return "e1a1"
+        if uci == "e8g8":
+            return "e8h8"
+        if uci == "e8c8":
+            return "e8a8"
     return uci
+
 
 def build_book_file(pgn_path, book_path, book):
     with open(pgn_path) as pgn_file:
@@ -141,6 +153,7 @@ def build_book_file(pgn_path, book_path, book):
 
     book.normalize_weights()
     book.save_as_polyglot(book_path)
+
 
 if __name__ == "__main__":
     # 👇 Merge into existing book

@@ -10,10 +10,12 @@ BOOK_OUTPUT = "horde_book_white.bin"
 MAX_PLY = 60
 MAX_BOOK_WEIGHT = 2520
 
+
 class BookMove:
     def __init__(self):
         self.weight = 0
         self.move = None
+
 
 class BookPosition:
     def __init__(self):
@@ -21,6 +23,7 @@ class BookPosition:
 
     def get_move(self, uci):
         return self.moves.setdefault(uci, BookMove())
+
 
 class Book:
     def __init__(self):
@@ -57,8 +60,10 @@ class Book:
                 f.write(e)
         print(f"Saved {len(entries)} moves to {path}")
 
+
 def key_hex(board):
     return f"{chess.polyglot.zobrist_hash(board):016x}"
+
 
 def build_book(pgn_file, bin_file):
     book = Book()
@@ -96,6 +101,7 @@ def build_book(pgn_file, bin_file):
         for bm in pos.moves.values():
             bm.weight = min(MAX_BOOK_WEIGHT, bm.weight + random.randint(0, 3))
     book.save_polyglot(bin_file)
+
 
 if __name__ == "__main__":
     build_book(PGN_INPUT, BOOK_OUTPUT)
